@@ -3,11 +3,16 @@ package server
 import (
 	"net/http"
 	"fmt"
+	"github.com/gorilla/mux"
 )
 
 func Start() {
-	http.HandleFunc("/", process)
+	r := mux.NewRouter()
+	r.HandleFunc("/", process).Methods("POST")
+
 	fmt.Println("Server was started")
+
+	http.Handle("/", r)
 	http.ListenAndServe(":8030", nil)
 }
 
