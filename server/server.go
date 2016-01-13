@@ -3,9 +3,14 @@ package server
 import (
 	"net/http"
 	"fmt"
+	"github.com/doojin/doc-to-html-service/service/dirscanner"
 	"github.com/gorilla/mux"
 )
 
+var Scanner dirscanner.DirScannerInterface = new(dirscanner.DirScanner)
+
+// Start starts the web server which is responsible for receiving
+// requests for converting
 func Start() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", process).Methods("POST")
@@ -17,5 +22,7 @@ func Start() {
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Request was received")
+	dir := r.FormValue("dir")
+	files := Scanner.ScanDir(dir)
+	fmt.Println(files)
 }
